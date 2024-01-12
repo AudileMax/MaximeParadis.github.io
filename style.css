@@ -240,7 +240,7 @@ Text{
 
 .grid .box img{
 	position:relative;
-	max-width: 500px;
+	max-width: 600px;
 }
 .grid .box:nth-child(1)
 {

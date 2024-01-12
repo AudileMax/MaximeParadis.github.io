@@ -185,22 +185,17 @@ section .content img{
 .rightText{
 	margin-left: 10%;
 }
-.Container {
-    width: 90%;
-    min-width: 500px;
-    margin: auto;
-}
-.containerImg{
-	display:flex;
-	align-items:center;
-	justify-content:center;
-	margin:190px 100px 0 100px;
+Text{
+	background: black;
+	grid-area: Text;
+	grid-column: span 2;
 }
 .leftImg{
 	z-index: -1;
-	width:500px;
+	max-width: 20%;
+	min-width: 5%;
 	position:absolute;
-	top:900px;
+	top:100%;
 	left:10%;
 }
 .wrapper{
@@ -222,6 +217,46 @@ section .content img{
 .logo{
 	width:30px;
 }
+
+.grid {
+	position: relative;
+	max-width: 100%;
+	display: grid;
+	grid-template-columns:repeat(100%);
+	grid-template-rows: minmax(100px,auto);
+	margin: 10%;
+	grid-auto-flow: dense;
+	grid-gap: 10px;
+	place-items: center;
+}
+
+.grid .box{
+	min-width: 40%;
+	padding: 20px;
+	display: grid;
+	place-items: center;
+	text-align: center;
+}
+
+.grid .box img{
+	position:relative;
+	max-width: 600px;
+}
+.grid .box:nth-child(1)
+{
+	grid-column: span 2;
+	margin-left: 40%;
+}
+.grid .box:nth-child(2)
+{
+	grid-column: span 2;
+	margin-right: 40%;
+}
+.grid .box:nth-child(3)
+{
+	grid-column: span 4;
+}
+
 @keyframes slide {
 	0%{
 		background-image: url("indexImg/backgroundHome.jpg");

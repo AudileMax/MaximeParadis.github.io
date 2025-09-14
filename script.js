@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const remaining = delay - elapsed;
         if (remaining > 0) {
             startCooldown(remaining);
+            myButton.style.backgroundColor = "#5cb85c";
         }
     }
 

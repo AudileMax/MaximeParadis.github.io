@@ -1,33 +1,18 @@
-// Get the button element from the HTML
-const myButton = document.getElementById('brushTeeth');
-const delay = 3600; // seconds to disable
-let streak = Number(localStorage.getItem("teethStreak")) || 0;
-const streakElement = document.getElementById('streakTeeth');
-
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Page fully loaded!");
-    console.log(streak);
-    streakElement.TextContent = streak;
+    // Declare variables
+    const myButton = document.getElementById('brushTeeth');
+    const streakElement = document.getElementById('streakTeeth');
+    const delay = 3600; // cooldown in seconds (1 hour)
 
-    // Add a "click" event listener to the button
-    myButton.addEventListener('click', () => {
-        //const mainContent = document.querySelector('main button');
+    // Load streak from localStorage
+    let streak = Number(localStorage.getItem("teethStreak")) || 0;
+    streakElement.textContent = streak;
 
-        //Change element style
-        myButton.style.backgroundColor = "#5cb85c";
+    // Function to start cooldown
+    function startCooldown(timeLeft) {
         myButton.disabled = true;
-        myButton.textContent = `Teeth has been brushed!`;
-
-        //update and save streak
-        streak += 1;
-        streakElement.textContent = streak;
-        localStorage.setItem("teethStreak", streak);
-
-        //start cooldown timer
-        let timeLeft = delay;
 
         const interval = setInterval(() => {
-
             if (timeLeft > 60) {
                 myButton.textContent = `Teeth has been brushed! Wait ${Math.floor(timeLeft / 60)}m`;
             } else {
@@ -37,17 +22,38 @@ document.addEventListener("DOMContentLoaded", () => {
             timeLeft--;
 
             if (timeLeft < 0) {
-                clearInterval(interval);          // stop the countdown
-                myButton.disabled = false;        // re-enable the button
-                myButton.textContent = "Click me"; // restore original text
+                clearInterval(interval);
+                myButton.disabled = false;
+                myButton.textContent = "Brush Your Teeth!";
                 myButton.style.backgroundColor = "#FF0000";
+                localStorage.removeItem("lastClick"); // cooldown finished
             }
         }, 1000);
+    }
 
-        // Optional: Log a message to the browser console
+    // Check if there’s an ongoing cooldown
+    const lastClick = localStorage.getItem("lastClick");
+    if (lastClick) {
+        const elapsed = Math.floor((Date.now() - Number(lastClick)) / 1000);
+        const remaining = delay - elapsed;
+        if (remaining > 0) {
+            startCooldown(remaining);
+        }
+    }
+
+    // Handle button click
+    myButton.addEventListener('click', () => {
+        streak += 1;
+        streakElement.textContent = streak;
+        localStorage.setItem("teethStreak", streak);
+
+        // Save timestamp of click
+        localStorage.setItem("lastClick", Date.now());
+
+        // Change button style and start cooldown
+        myButton.style.backgroundColor = "#5cb85c";
+        startCooldown(delay);
+
         console.log('Button was clicked!');
     });
-
-
 });
-

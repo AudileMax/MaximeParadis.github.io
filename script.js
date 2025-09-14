@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 clearInterval(interval);
                 myButton.disabled = false;
                 myButton.textContent = "Brush Your Teeth!";
-                myButton.style.backgroundColor = "#FF0000";
+                myButton.style.backgroundColor = "#5cb85c";
                 localStorage.removeItem("lastClick"); // cooldown finished
             }
         }, 1000);
@@ -37,7 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const elapsed = Math.floor((Date.now() - Number(lastClick)) / 1000);
         const remaining = delay - elapsed;
         if (remaining > 0) {
+            myButton.style.backgroundColor = "#FF0000";
             startCooldown(remaining);
+        }
+        else { // 5cb85c
             myButton.style.backgroundColor = "#5cb85c";
         }
     }
@@ -52,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("lastClick", Date.now());
 
         // Change button style and start cooldown
-        myButton.style.backgroundColor = "#5cb85c";
+        myButton.style.backgroundColor = "#FF0000";
         startCooldown(delay);
 
         console.log('Button was clicked!');

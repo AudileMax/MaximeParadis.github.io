@@ -17,9 +17,33 @@
     </header>
 
     <main>
-        <a href="index.html">Home</a>
+        <p>Create a new task by filling the elements bellow and clicking the button!</p>
 
-        <p>The goal of this website will be for one help me develop my abbilities as a developer. And create a website i feel i have always needed.</p>
+        <form>
+            <p>Select one option:</p>
+
+            <label>
+                <input type="radio" name="myChoice" value="1">
+                Single Task
+            </label><br>
+
+            <label>
+                <input type="radio" name="myChoice" value="2">
+                Repeted Task
+            </label><br>
+
+            <label>
+                <input type="radio" name="myChoice" value="3">
+                Dead Line task
+            </label>
+        </form>
+
+        <input id="newTaskName" type="text" value="Enter Task Name Here!">
+
+        <label for="mySlider" id="newTPD">Times Per Day:</label>
+        <input type="range" id="mySlider" min="1" max="10" value="5" step="1">
+        <span id="sliderValue">5</span>
+        <button id="createButton"> Create Task! </button>
 
         <p>Your Current Streak: <span id="streakTeeth">0</span></p>
         <button id="brushTeeth">Brush Your Teeth!</button>

@@ -4,8 +4,8 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    background-image: linear-gradient(rgb(36, 36, 36) 0%,rgb(36, 36, 36) 25%, rgb(99, 99, 99)50%,rgb(36, 36, 36) 75%,rgb(36, 36, 36) 100%);
+    color: #d4d4d4;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -16,6 +16,11 @@ header {
     color: #fff;
     padding: 1rem 0;
     text-align: center;
+}
+
+nav a{
+    color: #d4d4d4;
+    text-decoration: none;
 }
 
 main {

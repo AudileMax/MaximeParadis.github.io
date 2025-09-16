@@ -7,11 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const slider = document.getElementById('mySlider');
     const sliderValue = document.getElementById('sliderValue');
 
+    const main = document.querySelector('main');
+
+    const taskSection = document.getElementById('taskList');
+
     const createBTN = document.getElementById('createButton');
 
     let tasks = [];
     let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
+    
     //Structs
     function newTask(name, id, taskType, timesCompleted, completionsNeeded){
         this.name = name;
@@ -22,8 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Load streak from localStorage
-    let streak = Number(localStorage.getItem("teethStreak")) || 0;
-    streakElement.textContent = streak;
+    //let streak = Number(localStorage.getItem("teethStreak")) || 0;
+    //streakElement.textContent = streak;
 
     // Functions
     function startCooldown(timeLeft, tempBTN) {
@@ -51,33 +55,47 @@ document.addEventListener("DOMContentLoaded", () => {
     function createNewButton(type, taskName, timesPerDay, timesCompleted = 0)
     {
 
-        if (type == '1') // Button
+        if (type == 1) // Button
         {
             const btn = document.createElement('button');
-            btn.textContent = taskName.value;
+            btn.textContent = 'Complete Task';
             btn.style.backgroundColor = "#5cb85c";
-            btn.id = taskName.value + 'Task' + '1';
+            btn.id = 'Task' + '1';
             // add to main
-            const main = document.querySelector('main');
-            main.appendChild(btn);
+            const taskContainer = document.createElement('div');
+            taskContainer.className = 'task';
+
+            const title = document.createElement('h3');
+            title.textContent = taskName;
+
+            taskContainer.appendChild(title);
+            taskContainer.appendChild(btn);
+            taskSection.appendChild(taskContainer);
 
             const tempTask = new newTask(btn.textContent, btn.id, 2, timesCompleted, timesPerDay);
             tasks.push(tempTask);
         }
-        else if (type == '2')
+        else if (type == 2)
         {
             const btn = document.createElement('button');
-            btn.textContent = taskName.value;
+            btn.textContent = 'Complete Task';
             btn.style.backgroundColor = "#5cb85c";
-            btn.id = taskName.value + 'Task' + '2';
+            btn.id = 'Task' + '2';
             // add to main
-            const main = document.querySelector('main');
-            main.appendChild(btn);
+            const taskContainer = document.createElement('div');
+            taskContainer.className = 'task';
 
-            const tempTask = new newTask(btn.textContent, btn.id, "option2", timesCompleted, timesPerDay);
+            const title = document.createElement('h3');
+            title.textContent = taskName;
+
+            taskContainer.appendChild(title);
+            taskContainer.appendChild(btn);
+            taskSection.appendChild(taskContainer);
+
+            const tempTask = new newTask(btn.textContent, btn.id, 2, timesCompleted, timesPerDay);
             tasks.push(tempTask);
         }
-        else if (type == '3')
+        else if (type == 3)
         {
 
         }
@@ -85,11 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
         savedTasks = tasks;
     }
 
-    const main = document.querySelector('main');
-
     savedTasks.forEach(taskData => {
         createNewButton(taskData.taskType, taskData.name, taskData.completionsNeeded, taskData.timesCompleted);
-
     });
 
     main.addEventListener('click', (event) => {
@@ -99,9 +114,11 @@ document.addEventListener("DOMContentLoaded", () => {
         event.target.style.backgroundColor = "#FF0000";
         alert(`Task "${taskName}" clicked!`);
 
-        if (event.target.id.includes('1'))
+        let tempid = event.target.id;
+
+        if (tempid.includes('1'))
         {
-            event.target.remove(); 
+            event. target.remove(); 
         }
 
     }
@@ -138,20 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     // Handle button click
-    myButton.addEventListener('click', () => {
-        streak += 1;
-        streakElement.textContent = streak;
-        localStorage.setItem("teethStreak", streak);
-
-        // Save timestamp of click
-        localStorage.setItem("lastClick", Date.now());
-
-        // Change button style and start cooldown
-        myButton.style.backgroundColor = "#FF0000";
-        startCooldown(delay, myButton);
-
-        console.log('Button was clicked!');
-    });
 
     slider.addEventListener('input', () => {
         sliderValue.textContent = slider.value;

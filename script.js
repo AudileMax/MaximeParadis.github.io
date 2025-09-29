@@ -1,17 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     // Declare variables
-    const myButton = document.getElementById('brushTeeth');
-    const streakElement = document.getElementById('streakTeeth');
-    const delay = 3600; // cooldown in seconds (1 hour)
+    const form = document.getElementById('newTaskForm');
+    const accordion = document.getElementById('tasksAccordion');
 
-    const slider = document.getElementById('mySlider');
-    const sliderValue = document.getElementById('sliderValue');
+    let taskCounter = 0; // unique id for each accordion item
 
     const main = document.querySelector('main');
 
     const taskSection = document.getElementById('taskList');
-
-    const createBTN = document.getElementById('createButton');
 
     let tasks = [];
     let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -52,76 +48,97 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 1000);
     }
 
-    function createNewButton(type, taskName, timesPerDay, timesCompleted = 0)
-    {
+    form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const taskNameInput = document.getElementById('taskName');
+    const taskName = taskNameInput.value.trim();
 
-        if (type == 1) // Button
+    if (taskName) {
+        const tempslider = document.getElementById('sliderTimes');
+        const taskLabel = document.querySelector('input[name="taskLabel"]:checked').value;
+        
+        addTask( taskLabel, taskName, tempslider.value, 0);
+        taskNameInput.value = ''; // clear input
+    }
+    });
+
+    function addTask(type, taskName, timesPerDay, timesCompleted = 0) {
+
+        taskCounter++;
+        const taskId = `task${taskCounter}${type}`;
+
+        if(type == 1)
         {
-            const btn = document.createElement('button');
-            btn.textContent = 'Complete Task';
-            btn.style.backgroundColor = "#5cb85c";
-            btn.id = 'Task' + '1';
-            // add to main
-            const taskContainer = document.createElement('div');
-            taskContainer.className = 'task';
-
-            const title = document.createElement('h3');
-            title.textContent = taskName;
-
-            taskContainer.appendChild(title);
-            taskContainer.appendChild(btn);
-            taskSection.appendChild(taskContainer);
-
-            const tempTask = new newTask(btn.textContent, btn.id, 2, timesCompleted, timesPerDay);
+            const tempTask = new newTask(taskName, taskId, 1, timesCompleted, timesPerDay);
             tasks.push(tempTask);
         }
         else if (type == 2)
         {
-            const btn = document.createElement('button');
-            btn.textContent = 'Complete Task';
-            btn.style.backgroundColor = "#5cb85c";
-            btn.id = 'Task' + '2';
-            // add to main
-            const taskContainer = document.createElement('div');
-            taskContainer.className = 'task';
-
-            const title = document.createElement('h3');
-            title.textContent = taskName;
-
-            taskContainer.appendChild(title);
-            taskContainer.appendChild(btn);
-            taskSection.appendChild(taskContainer);
-
-            const tempTask = new newTask(btn.textContent, btn.id, 2, timesCompleted, timesPerDay);
+            taskId += "Repeat";
+            const tempTask = new newTask(taskName, taskId, 2, timesCompleted, timesPerDay);
             tasks.push(tempTask);
         }
         else if (type == 3)
         {
-
+            taskId += "Deadline";
+            const tempTask = new newTask(taskName, taskId, 3, timesCompleted, timesPerDay);
+            tasks.push(tempTask);
         }
+
         localStorage.setItem("tasks", JSON.stringify(tasks));
         savedTasks = tasks;
+
+        // Create accordion item
+        const item = document.createElement('div');
+        item.className = 'accordion-item';
+
+        const btnId = "Button" + taskId;
+
+        item.innerHTML = `
+            <h2 class="accordion-header" id="heading${taskId}">
+            <button class="accordion-button collapsed" type="button"
+                    id="${btnId}"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapse${taskId}" aria-expanded="false"
+                    aria-controls="collapse${taskId}">
+                ${taskName}
+            </button>
+            </h2>
+            <div id="collapse${taskId}" class="accordion-collapse collapse"
+                aria-labelledby="heading${taskId}" data-bs-parent="#tasksAccordion">
+            <div class="accordion-body">
+                <p>Task details go here…</p>
+                <button class="btn btn-sm btn-danger">Delete Task</button>
+            </div>
+            </div>
+        `;
+        // Add delete button functionality
+        const deleteBtn = item.querySelector('.btn-danger');
+        deleteBtn.addEventListener('click', () => {
+            item.remove();
+        });
+
+        const accordionBtn = item.querySelector(`#${btnId}`);
+        accordionBtn.addEventListener('click', () => {
+            startCooldown(2, accordionBtn);
+            accordionBtn.style.backgroundColor = "#FF0000";
+            if(type == 1)
+            {
+                item.remove();
+                const index = tasks.findIndex(task => task.id === taskId);
+                if(index !== -1){
+                    tasks.splice(index,1);
+                    localStorage.setItem("tasks", JSON.stringify(tasks));
+                    savedTasks = tasks;
+                }
+            }
+        })
+
+        accordion.appendChild(item);
     }
 
     savedTasks.forEach(taskData => {
-        createNewButton(taskData.taskType, taskData.name, taskData.completionsNeeded, taskData.timesCompleted);
-    });
-
-    main.addEventListener('click', (event) => {
-    if (event.target.tagName === 'BUTTON' && event.target.id.includes("Task")) {
-        const taskName = event.target.textContent;
-        startCooldown(2, event.target);
-        event.target.style.backgroundColor = "#FF0000";
-        alert(`Task "${taskName}" clicked!`);
-
-        let tempid = event.target.id;
-
-        if (tempid.includes('1'))
-        {
-            event. target.remove(); 
-        }
-
-    }
+        addTask(taskData.taskType, taskData.name, taskData.completionsNeeded, taskData.timesCompleted);
     });
 
     // Check if there’s an ongoing cooldown
@@ -137,27 +154,4 @@ document.addEventListener("DOMContentLoaded", () => {
             myButton.style.backgroundColor = "#5cb85c";
         }
     }
-
-    createBTN.addEventListener('click', () => {
-         const selected = document.querySelector('input[name="myChoice"]:checked');
-
-         let taskName = document.getElementById('newTaskName');
-         let timesPerDay = document.getElementById('newTPD');
-
-            if (selected) 
-            {
-                createNewButton(selected.value, taskName, timesPerDay, 0);
-            } 
-            else 
-            {
-                alert('No option selected yet!');
-            }
-    })
-
-    // Handle button click
-
-    slider.addEventListener('input', () => {
-        sliderValue.textContent = slider.value;
-    });
-
 });

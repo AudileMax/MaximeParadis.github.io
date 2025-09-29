@@ -11,13 +11,6 @@ body {
     min-height: 100vh;
 }
 
-#taskList {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
-}
-
 .task {
   background: #f7f7f7;
   border-radius: 8px;
@@ -51,6 +44,28 @@ main {
     flex: 1;
     padding: 2rem;
     text-align: center;
+}
+
+.task-card {
+  display: inline-block;
+  margin: 0.5rem auto;
+  color: #333;
+  background-color: #d4d4d4; 
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+
+  /* 👇 size rules */
+  width: 100%;            /* fill available row on small screens */
+  max-width: 400px;       /* never grow larger than this */
+  min-width: 200px;       /* never shrink smaller than this */
+  box-sizing: border-box; /* include padding in size */
+}
+
+.task-card .card-body {
+  display: flex;
+  justify-content: space-between; /* 👈 pushes name left, buttons right */
+  align-items: center;       /* vertically align */ 
+  background-color: #d4d4d4;
 }
 
 button {

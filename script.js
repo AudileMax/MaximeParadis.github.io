@@ -74,13 +74,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         else if (type == 2)
         {
-            taskId += "Repeat";
             const tempTask = new newTask(taskName, taskId, 2, timesCompleted, timesPerDay);
             tasks.push(tempTask);
         }
         else if (type == 3)
         {
-            taskId += "Deadline";
             const tempTask = new newTask(taskName, taskId, 3, timesCompleted, timesPerDay);
             tasks.push(tempTask);
         }
@@ -94,31 +92,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const btnId = "Button" + taskId;
 
+
         item.innerHTML = `
-            <h2 class="accordion-header" id="heading${taskId}">
-            <button class="accordion-button collapsed" type="button"
-                    id="${btnId}"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse${taskId}" aria-expanded="false"
-                    aria-controls="collapse${taskId}">
-                ${taskName}
-            </button>
-            </h2>
-            <div id="collapse${taskId}" class="accordion-collapse collapse"
-                aria-labelledby="heading${taskId}" data-bs-parent="#tasksAccordion">
-            <div class="accordion-body">
-                <p>Task details go here…</p>
-                <button class="btn btn-sm btn-danger">Delete Task</button>
+        <div class="card mb-2 shadow-sm task-card">
+            <div class="card-body">
+            <span class="fw-bold">${taskName}</span>
+            <div class="btn-group">
+                <button class="btn btn-sm btn-success finish-task">Finish</button>
+                <button class="btn btn-sm btn-danger delete-task">Delete</button>
             </div>
             </div>
+        </div>
         `;
+        
         // Add delete button functionality
         const deleteBtn = item.querySelector('.btn-danger');
         deleteBtn.addEventListener('click', () => {
             item.remove();
+            const index = tasks.findIndex(task => task.id === taskId);
+            tasks.splice(index,1);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            savedTasks = tasks;
         });
 
-        const accordionBtn = item.querySelector(`#${btnId}`);
+        const accordionBtn = item.querySelector('.btn-success');
         accordionBtn.addEventListener('click', () => {
             startCooldown(2, accordionBtn);
             accordionBtn.style.backgroundColor = "#FF0000";
